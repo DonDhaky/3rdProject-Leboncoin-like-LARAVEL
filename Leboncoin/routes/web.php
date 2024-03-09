@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::controller(App\Http\Controllers\AdsController::class)->group(function () {
-    Route::get('/ads', 'index');
+    Route::get('/ads', 'index')->middleware('admin');
     Route::get('/create_ad', 'create')->name('ads.create');
     Route::post('/create_ad', 'store')->name('ads.store');
     Route::get('/edit_ad/{one_ad_id}', 'edit')->name('ads.edit');
