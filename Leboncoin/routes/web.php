@@ -39,5 +39,7 @@ Route::controller(App\Http\Controllers\AdsController::class)->group(function () 
     Route::put('/edit_ad/{one_ad_id}', 'update')->name('ads.update');
     Route::get('/delete_ad/{one_ad_id}', 'delete')->name('ads.delete');
     Route::get('/', 'show')->name('home');
+    Route::get('/ads/{one_ad_id}', 'showonead')->name('ads.show');
+    Route::get('/dashboard', 'dashboard')->name('dashboard');
 });
 

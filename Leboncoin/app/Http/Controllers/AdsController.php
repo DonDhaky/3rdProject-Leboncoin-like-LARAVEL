@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Ads;
 use Illuminate\Http\Request;
 use App\Http\Requests\AdsFormRequest;
-use Illuminate\Support\Facades\Storage; // utilisé pour la suppression des images stockées dans le projet
+use Illuminate\Support\Facades\Storage; // utilisé pour la suppression des images stockées
+use Illuminate\Support\Facades\Auth;
 
 class AdsController extends Controller
 {
@@ -32,7 +33,14 @@ class AdsController extends Controller
     public function store(AdsFormRequest $request)
     {
         $data = $request->validated();
+
+        $user = Auth::user();
+
         $ad = Ads::create($data);
+
+        $ad->user_id = $user->id;
+
+        $ad->save();
 
         return redirect('/create_ad')->with('message', 'Your ad were created successfuly.');
     }
@@ -45,7 +53,7 @@ class AdsController extends Controller
         // Récupérez toutes les annonces de la base de données à partir du modèle "Ads"
         $ads = Ads::all();
 
-        // Passez les annonces à la vue 'welcolme'
+        // Passez les annonces à la vue 'welcome'
         return view('welcome', ['ads' => $ads]);
     }
 
@@ -57,6 +65,7 @@ class AdsController extends Controller
         $one_ad = Ads::find($one_ad_id);
         return view('ads.edit_ad', compact('one_ad'));    
     }
+    
 
     /**
      * Update the specified resource in storage.
@@ -79,7 +88,7 @@ class AdsController extends Controller
             'location' => $data['location']
         ]);
 
-        return redirect('/ads')->with('message', 'Ad edited successfuly.');
+        return redirect('/dashboard')->with('message', 'Ad edited successfuly.');
     }
 
     /**
@@ -105,10 +114,30 @@ class AdsController extends Controller
         // Ca supprime l'annonce
         $one_ad->delete();
 
-        return redirect('/ads')->with('message', 'Ad deleted successfully.');
+        return redirect('/dashboard')->with('message', 'Ad deleted successfully.');
     }
 
-    return redirect('/ads')->with('message', 'Ad not found.');
+    return redirect('/dashboard')->with('message', 'Ad not found.');
+    }
+
+
+    public function showonead($one_ad_id)
+{
+    $ad = Ads::findOrFail($one_ad_id);
+
+    return view('show_one_ad', compact('ad'));
+}
+
+    public function dashboard()
+    {
+        // user
+        $user = Auth::user();
+    
+        // annonces de l'user
+        $userAds = $user->ads;
+    
+        // Retourne la vue avec les annonces de l'user
+        return view('dashboard', compact('userAds'));
     }
 
 }

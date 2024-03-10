@@ -23,5 +23,6 @@ class Ads extends Model
         'path', //for the picture
         'price',
         'location',
+        'user_id', // pour la relation avec les ads
     ];
 }

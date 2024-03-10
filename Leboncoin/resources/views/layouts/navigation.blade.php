@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('home') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
@@ -17,7 +17,7 @@
                     </x-nav-link>
 
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Your ads') }}
                     </x-nav-link>
 
                     <x-nav-link :href="url('create_ad')" :active="request()->routeIs('create_ad')">
@@ -25,7 +25,7 @@
                     </x-nav-link>
 
                     <x-nav-link :href="url('ads')" :active="request()->routeIs('ads')">
-                        {{ __('Ads') }}
+                        {{ __('Admin') }}
                     </x-nav-link>
                 </div>
             </div>

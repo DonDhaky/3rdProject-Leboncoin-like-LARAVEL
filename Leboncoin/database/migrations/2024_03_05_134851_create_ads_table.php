@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('path');
             $table->integer('price');
             $table->string('location');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }
