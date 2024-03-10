@@ -41,7 +41,7 @@ class AdsFormRequest extends FormRequest
             
             "path" => [
                 'required',
-                'max:255'
+                'max:2500'
             ],
 
             "price" => [

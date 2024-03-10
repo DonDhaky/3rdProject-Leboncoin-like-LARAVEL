@@ -32,14 +32,48 @@
                 </div>
             @endif
             
+            <form action="{{ url('/') }}" method="GET">
+                    <div class="mb-4">
+                        <label for="category" class="block text-gray-700 font-bold mb-2">Category:</label>
+                        <select id="category" name="category" class="border border-gray-300 rounded-md shadow-sm py-2 px-5 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="">All categories</option>
+                            @foreach (App\Models\Ads::distinct()->get(['category']) as $category)
+                            <option value="{{ $category->category }}" {{ (request()->input('category') == $category->category) ? 'selected' : '' }}>{{ $category->category }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="location" class="block text-gray-700 font-bold mb-2">Location:</label>
+                        <select id="location" name="location" class="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="">All locations</option>
+                            @foreach (App\Models\Ads::distinct()->get(['location']) as $location)
+                            <option value="{{ $location->location }}" {{ (request()->input('location') == $location->location) ? 'selected' : '' }}>{{ $location->location }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                    <div class="mb-4">
+                        <label for="min_price" class="block text-gray-700 font-bold mb-2">Minimum price:</label>
+                        <input id="min_price" name="min_price" type="text" class="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ request()->input('min_price') }}">
+                    </div>
+                    <div class="mb-4">
+                        <label for="max_price" class="block text-gray-700 font-bold mb-2">Maximum price:</label>
+                        <input id="max_price" name="max_price" type="text" class="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ request()->input('max_price') }}">
+                    </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">Filter</button>
+                    <button type="button" id="reset-filters" class="bg-gray-500 hover:bg-gray-700 text-black font-bold py-2 px-4 rounded ml-2">Reset</button>
+                </form>
 
             <div class="mx-auto mt-16 max-w-7xl">
     <div class="grid grid-cols-1 gap-4">
         @foreach ($ads as $ad)
             <a href="{{ route('ads.show', ['one_ad_id' => $ad->id]) }}" class="bg-white rounded-lg shadow-md p-6 max-w-1/2 mx-auto" style="margin: 7px;">
-                @if ($ad->path)
+                <!-- @if ($ad->path)
                     <img src="{{ asset('storage/' . $ad->path) }}" alt="Image" class="mt-4 max-w-full h-auto max-h-100">
-                @endif
+                @endif -->
+
+                <div style="display:flex;justify-content:center;"><img style="max-width: 200px;max-height:200px" src="{{ $ad->path }}" alt="Description de l'image"></div>
+
+                
                 <h2 class="text-xl font-semibold">{{ $ad->title }}</h2>
                 <p class="text-gray-600">Category: {{ $ad->category }}</p>
                 <p class="text-gray-500">Description: {{ $ad->description }}</p>
@@ -52,3 +86,11 @@
          </div>
 </body>
 </html>
+    <script>
+        document.getElementById('reset-filters').addEventListener('click', function() {
+            document.getElementById('category').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('min_price').value = '';
+            document.getElementById('max_price').value = '';
+        });
+    </script>

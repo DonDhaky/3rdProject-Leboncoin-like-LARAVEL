@@ -25,4 +25,9 @@ class Ads extends Model
         'location',
         'user_id', // pour la relation avec les ads
     ];
+    public function user()
+{
+    return $this->belongsTo(User::class);
 }
+}
+

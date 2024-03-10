@@ -43,3 +43,7 @@ Route::controller(App\Http\Controllers\AdsController::class)->group(function () 
     Route::get('/dashboard', 'dashboard')->name('dashboard');
 });
 
+Route::get('/only-verified', function () {
+    return view('only-verified');
+})->middleware(['auth', 'verified']);
+

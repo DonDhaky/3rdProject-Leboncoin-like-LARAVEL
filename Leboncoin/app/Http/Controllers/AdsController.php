@@ -13,11 +13,36 @@ class AdsController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
         $ads = Ads::all();
         return view('ads.index', compact('ads'));
     }
+
+    // public function index(Request $request)
+    // {
+    //     $category = $request->input('category');
+    //     $location = $request->input('location');
+    //     $minPrice = $request->input('min_price');
+    //     $maxPrice = $request->input('max_price');
+    //     $query = Ads::query();
+    //     if ($category) {
+    //         $query->where('category', $category);
+    //     }
+    //     if ($location) {
+    //         $query->where('location', $location);
+    //     }
+    //     if ($minPrice) {
+    //         $query->where('price', '>=', $minPrice);
+    //     }
+    //     if ($maxPrice) {
+    //         $query->where('price', '<=', $maxPrice);
+    //     }
+    //     $ads = $query->get();
+
+    //     return view('ads.index', compact('ads'));
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -30,28 +55,58 @@ class AdsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(AdsFormRequest $request)
+    // {
+    //     $data = $request->validated();
+
+    //     $user = Auth::user();
+
+    //     $ad = Ads::create($data);
+
+    //     $ad->user_id = $user->id;
+
+    //     $ad->save();
+
+    //     return redirect('/create_ad')->with('message', 'Your ad were created successfuly.');
+    // }
     public function store(AdsFormRequest $request)
-    {
-        $data = $request->validated();
+{
+    $data = $request->validated();
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        $ad = Ads::create($data);
+    $ad = $user->ads()->create($data);
 
-        $ad->user_id = $user->id;
+    return redirect('/create_ad')->with('message', 'Your ad were created successfuly.');
+}
 
-        $ad->save();
 
-        return redirect('/create_ad')->with('message', 'Your ad were created successfuly.');
-    }
 
     /**
       * Display les ads dans home.
      */
-    public function show()
+    public function show(Request $request)
     {
+        $category = $request->input('category');
+        $location = $request->input('location');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+        $query = Ads::query();
+        if ($category) {
+            $query->where('category', $category);
+        }
+        if ($location) {
+            $query->where('location', $location);
+        }
+        if ($minPrice) {
+            $query->where('price', '>=', $minPrice);
+        }
+        if ($maxPrice) {
+            $query->where('price', '<=', $maxPrice);
+        }
+        $ads = $query->get();
         // Récupérez toutes les annonces de la base de données à partir du modèle "Ads"
-        $ads = Ads::all();
+        // $ads = Ads::all();
 
         // Passez les annonces à la vue 'welcome'
         return view('welcome', ['ads' => $ads]);
@@ -128,16 +183,49 @@ class AdsController extends Controller
     return view('show_one_ad', compact('ad'));
 }
 
-    public function dashboard()
-    {
-        // user
-        $user = Auth::user();
+    // public function dashboard()
+    // {
+    //     // user
+    //     $user = Auth::user();
     
-        // annonces de l'user
-        $userAds = $user->ads;
+    //     // annonces de l'user
+    //     $userAds = $user->ads;
     
-        // Retourne la vue avec les annonces de l'user
-        return view('dashboard', compact('userAds'));
+    //     // Retourne la vue avec les annonces de l'user
+    //     return view('dashboard', compact('userAds'));
+    // }
+    public function dashboard(Request $request)
+{
+    // user
+    $user = Auth::user();
+
+    // annonces de l'user
+    $query = $user->ads();
+
+    $category = $request->input('category');
+    $location = $request->input('location');
+    $minPrice = $request->input('min_price');
+    $maxPrice = $request->input('max_price');
+
+    if ($category) {
+        $query->where('category', $category);
+    }
+    if ($location) {
+        $query->where('location', $location);
+    }
+    if ($minPrice) {
+        $query->where('price', '>=', $minPrice);
+    }
+    if ($maxPrice) {
+        $query->where('price', '<=', $maxPrice);
     }
 
+    $userAds = $query->get();
+
+    // Retourne la vue avec les annonces de l'user
+    return view('dashboard', compact('userAds'));
 }
+
+}
+
+
